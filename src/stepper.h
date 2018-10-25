@@ -9,16 +9,6 @@ void manuel(int sens);
 void calibration();
 void gotoEtage(int etage, float vitesse);
 
-void setup() 
-{
-  Serial.begin(9600);
-  pinMode(pinDirection,OUTPUT); // Step
-  pinMode(pinStep,OUTPUT); // Dir
-  pinMode(boutonUp, INPUT_PULLUP); // Up
-  pinMode(boutonDown, INPUT_PULLUP); // Down
-  pinMode(boutonCalibration, INPUT_PULLUP); // Calibration
-}
-
 void elevation(float distance,  float vitesse)
 // distance (float) : distance d'elevation en pouce (+ = UP, - = DOWN).
 // vitesse (float) : vitesse d'elevation (de 0 à 1).
