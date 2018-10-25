@@ -73,10 +73,17 @@ void gotoEtage(int etage, float vitesse)
   Serial.print("Go to etage ");
   Serial.println(etage);
   float distance = etages[etage] - etages[etageActuel];
+  unsigned long startTime = millis(); // Depart du chrono
   elevation(distance, vitesse);
+  unsigned long endTime = millis(); // Fin du chrono
+  double elapsedTime = (endTime - startTime)/1000.0; // Calcul du temps pour l'elevation
+  Serial.print("Temps = ");
+  Serial.println(elapsedTime);
+  Serial.println(" ");
   etageActuel = etage;
   Serial.print("Etage actuel = ");
   Serial.println(etageActuel);
   Serial.println(" ");
+  
 }
 #endif
