@@ -2,8 +2,9 @@
 Projet: PIRUS S1
 Equipe: P-19
 Auteurs: -Jeremie Bourque
+         -
 Description: Robot de magasinage
-Date: 25-10-2018
+Date: 28-10-2018
 */
 
 /* ****************************************************************************
@@ -36,12 +37,10 @@ Fonctions de boucle infini (loop())
 void loop() 
 {
   // Tests systeme d'elevation.
-  gotoEtage(2, 1);
-  delay(1000);
-  gotoEtage(0, 1);
   delay(1000);
   gotoEtage(1, 1);
   delay(1000);
+  gotoEtage(0, 1);
 
   // Main.
   if(digitalRead(boutonUp) == LOW)

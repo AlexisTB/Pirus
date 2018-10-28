@@ -1,3 +1,12 @@
+/*
+Projet: PIRUS S1
+Equipe: P-19
+Auteurs: -Jeremie Bourque
+         -
+Description: Librairie de toutes les variables globales.
+Date: 28-10-2018
+*/
+
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
@@ -13,13 +22,13 @@ const int pinStep = 27;
 
 // hauteur des etages en pouce (ref. absolue à partir du sol).
 const int nbEtages = 3;
-const int etages [nbEtages] = {0, 3, 6}; // hauteur en pouce.
+const int etages [nbEtages] = {0, 1, 2}; // hauteur en pouce.
 int etageActuel = 0; // num d'étage, sol = 0
 
 // constantes pour le moteur.
 const int stepsParRev = 200;
-const int pauseMin = 600;
-const int pauseMinManuel = 600;
+const int pauseMin = 600; // min 600
+const int pauseMinManuel = 600; // min 600
 
 // nb de filets par pouce de la vis
 const int filetsParPouce = 12;

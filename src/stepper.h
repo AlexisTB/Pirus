@@ -1,3 +1,11 @@
+/*
+Projet: PIRUS S1
+Equipe: P-19
+Auteurs: -Jeremie Bourque
+Description: Librairie des fonctions du stepper motor pour le systeme d'elevation.
+Date: 28-10-2018
+*/
+
 #ifndef STEPPER_H
 #define STEPPER_H
 #include "globals.h"
@@ -79,6 +87,10 @@ void gotoEtage(int etage, float vitesse)
   double elapsedTime = (endTime - startTime)/1000.0; // Calcul du temps pour l'elevation
   Serial.print("Temps = ");
   Serial.println(elapsedTime);
+  Serial.print("Vitesse (sec/po) = ");
+  Serial.println(abs(elapsedTime/distance)); //Calcul de la vitesse lineaire (sec/po)
+  Serial.print("RPM = ");
+  Serial.println(abs(distance*filetsParPouce/elapsedTime*60)); //Calcul du RPM
   Serial.println(" ");
   etageActuel = etage;
   Serial.print("Etage actuel = ");
