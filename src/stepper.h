@@ -2,18 +2,19 @@
 Projet: PIRUS S1
 Equipe: P-19
 Auteurs: -Jeremie Bourque
+         -Émile Dufour
 Description: Librairie des fonctions du stepper motor pour le systeme d'elevation.
-Date: 28-10-2018
+Date: 06-11-2018
 */
 
 #ifndef STEPPER_H
 #define STEPPER_H
 #include "globals.h"
 #include <Arduino.h>
+#include <LibRobus.h>
 
 // Prototypes de fonction.
 void elevation(float distance,  float vitesse);
-void manuel(int sens);
 void calibration();
 void gotoEtage(int etage, float vitesse);
 
@@ -47,32 +48,19 @@ void elevation(float distance,  float vitesse)
   }
 }
 
-void manuel(int sens)
-{
-// sens (int) : 1 = monter, 0 = descendre.
-  if(sens == 1)
-  {
-    digitalWrite(pinDirection, HIGH);
-    Serial.println("manuel Up");
-  }
-  else
-  {
-    digitalWrite(pinDirection, LOW);
-    Serial.println("manuel Down");
-  }
-  while(digitalRead(boutonUp) == LOW || digitalRead(boutonDown) == LOW)
-  {
-    digitalWrite(pinStep,HIGH); 
-    delayMicroseconds(pauseMinManuel); 
-    digitalWrite(pinStep,LOW);
-    delayMicroseconds(pauseMinManuel);
-  } 
-}
-
 void calibration()
 // Calibration de l'origine.
 {
+  digitalWrite(pinDirection, LOW); // set la direction pour descendre
+  while(!ROBUS_IsBumper(2))
+  {
+    digitalWrite(pinStep,HIGH); 
+    delayMicroseconds(pauseMin); 
+    digitalWrite(pinStep,LOW);
+    delayMicroseconds(pauseMin);
+  }
   etageActuel = 0;
+  
 }
 
 void gotoEtage(int etage, float vitesse)
