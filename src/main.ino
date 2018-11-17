@@ -4,7 +4,7 @@ Equipe: P-19
 Auteurs: -Jeremie Bourque
          -Émile Dufour
 Description: Robot de magasinage
-Date: 06-11-2018
+Date: 15-11-2018
 */
 
 /* ****************************************************************************
@@ -34,13 +34,22 @@ Fonctions de boucle infini (loop())
 
 void loop() 
 {
-  calibration();
-  while(1)
+  //calibration();
+  /*while(1)
   {
     //Test
     gotoEtage(1,1);
-    delay(1000);
+    delay(5000);
     gotoEtage(0,1);
-    delay(1000);
-  }
+    delay(5000);
+  }*/
+  Serial.println("Start");
+  Serial.print("Hauteur initiale = ");
+  Serial.println(hauteurActuelle);
+  gotoEtage(1,1);
+  delay(1000);
+  elevation(0.5,1);
+  delay(1000);
+  gotoEtage(0,1);
+
 }

@@ -4,7 +4,13 @@ Equipe: P-19
 Auteurs: -Jeremie Bourque
          -Émile Dufour
 Description: Librairie des fonctions du stepper motor pour le systeme d'elevation.
-Date: 06-11-2018
+Date: 15-11-2018
+*/
+
+/*TODO
+  Monter un peu apres avoir pris la charge 
+  Ajouter Or bumper switch pour la descente
+  Le prog doit connaitre sa hauteur en po, pas son etage
 */
 
 #ifndef STEPPER_H
@@ -15,14 +21,17 @@ Date: 06-11-2018
 
 // Prototypes de fonction.
 void elevation(float distance,  float vitesse);
-void calibration();
 void gotoEtage(int etage, float vitesse);
+void calibration();
+
 
 void elevation(float distance,  float vitesse)
 // distance (float) : distance d'elevation en pouce (+ = UP, - = DOWN).
 // vitesse (float) : vitesse d'elevation (de 0 à 1).
 {
   int steps = abs(stepsParRev * filetsParPouce * distance);
+  Serial.print("Nb de steps = ");
+  Serial.println(steps);
   int pause = pauseMin / vitesse;
   if(distance >= 0)
   {
@@ -38,19 +47,29 @@ void elevation(float distance,  float vitesse)
   Serial.println(vitesse);
   Serial.print("Distance = ");
   Serial.println(distance);
-  Serial.println(" ");
   for(int x = 0; x < steps; x++) // fait tourner le stepper motor le nb de steps desires.
   {
+    if(ROBUS_IsBumper(2))
+    {
+      Serial.println("break");
+      break;
+    }
     digitalWrite(pinStep,HIGH); 
     delayMicroseconds(pause); 
     digitalWrite(pinStep,LOW);
     delayMicroseconds(pause);
   }
+  
+  hauteurActuelle = hauteurActuelle + distance;
+  Serial.print("Hauteur actuelle = ");
+  Serial.println(hauteurActuelle);
+  Serial.println("");
 }
 
 void calibration()
 // Calibration de l'origine.
 {
+  Serial.println("Calibration");
   digitalWrite(pinDirection, LOW); // set la direction pour descendre
   while(!ROBUS_IsBumper(2))
   {
@@ -59,7 +78,7 @@ void calibration()
     digitalWrite(pinStep,LOW);
     delayMicroseconds(pauseMin);
   }
-  etageActuel = 0;
+  hauteurActuelle = 0;
   
 }
 
@@ -68,7 +87,7 @@ void gotoEtage(int etage, float vitesse)
 {
   Serial.print("Go to etage ");
   Serial.println(etage);
-  float distance = etages[etage] - etages[etageActuel];
+  float distance = etages[etage] - hauteurActuelle;
   unsigned long startTime = millis(); // Depart du chrono
   elevation(distance, vitesse);
   unsigned long endTime = millis(); // Fin du chrono
@@ -76,13 +95,9 @@ void gotoEtage(int etage, float vitesse)
   Serial.print("Temps = ");
   Serial.println(elapsedTime);
   Serial.print("Vitesse (sec/po) = ");
-  Serial.println(abs(elapsedTime/distance)); //Calcul de la vitesse lineaire (sec/po)
+  Serial.println(abs(float(elapsedTime)/distance)); //Calcul de la vitesse lineaire (sec/po)
   Serial.print("RPM = ");
   Serial.println(abs(distance*filetsParPouce/elapsedTime*60)); //Calcul du RPM
-  Serial.println(" ");
-  etageActuel = etage;
-  Serial.print("Etage actuel = ");
-  Serial.println(etageActuel);
   Serial.println(" ");
   
 }
