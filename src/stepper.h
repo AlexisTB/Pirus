@@ -49,7 +49,7 @@ void elevation(float distance,  float vitesse)
   Serial.println(distance);
   for(int x = 0; x < steps; x++) // fait tourner le stepper motor le nb de steps desires.
   {
-    if(ROBUS_IsBumper(2))
+    if(ROBUS_IsBumper(2) && distance < 0)
     {
       Serial.println("break");
       break;

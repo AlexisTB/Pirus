@@ -34,22 +34,14 @@ Fonctions de boucle infini (loop())
 
 void loop() 
 {
-  //calibration();
-  /*while(1)
+  calibration();
+  delay(1000);
+  while(1)
   {
     //Test
     gotoEtage(1,1);
-    delay(5000);
+    delay(1000);
     gotoEtage(0,1);
-    delay(5000);
-  }*/
-  Serial.println("Start");
-  Serial.print("Hauteur initiale = ");
-  Serial.println(hauteurActuelle);
-  gotoEtage(1,1);
-  delay(1000);
-  elevation(0.5,1);
-  delay(1000);
-  gotoEtage(0,1);
-
+    delay(1000);
+  }
 }
