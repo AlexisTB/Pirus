@@ -3,7 +3,7 @@
 
 #include <QTRSensors.h>
 #include <LibRobus.h>
-//#include "global.h"
+#include "globals.h"
 
 void fetchMeSomeFoodBridget(int p_numeroAllee);
 void calibrationAutoQuartDeTour(int p_sensAntiHoraire = 1);
@@ -21,7 +21,6 @@ const int GAUCHE = 0 ;
 const int DROITE = 1 ;
 const double CENTRE = 2500 ; // valeur retournée par les capteurs lorsque la ligne est au centre
 const float TEMPS_ATTENTE = 100.0;
-double erreurI = 0 ; 
 
 //Pour les mouvements basés sur les encodeurs lors de la calibration 
 //-------------------------------------------------
@@ -113,6 +112,22 @@ bool estUneLignePerpendiculaire()
     return nbTestsPositifs >= (3) ; 
 }
 
+bool detectionLignePerpendiculaireAlternative()
+{
+    int nbPositifs= 0 ;
+    int i = 0 ;
+    capteurs.readCalibrated(valeurSensors);
+    while (i < NB_SENSORS)
+    {
+        if (valeurSensors[i] > 500)
+        {
+            nbPositifs ++ ; 
+        };
+        i ++ ; 
+    }
+    return nbPositifs > (NB_SENSORS -3); 
+}
+
 int detectionLignePerpendiculaire()
 {
     int estUneLignePerpendiculaire = 1 ;
@@ -140,18 +155,35 @@ void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible)
   const double P = 0.0000200 ;
   const double I = 0.0000004;
   const double D = 0.0000500;
+  double erreurI = 0 ; 
   double ancienneErreur = 0 ; 
   int nbLignesPerpendiculairesRencontrees = 0 ; 
+  int nbPositifConsecutifsLignePerp = 0 ; 
 
   MOTOR_SetSpeed(GAUCHE, p_vitesseCible);
   MOTOR_SetSpeed(DROITE, p_vitesseCible);
 
   while(nbLignesPerpendiculairesRencontrees < p_nbLignesPerpendiculairesCible)
   {
-    if (estUneLignePerpendiculaire() && tempsGlobal - ancienTemps >=1)
+    int i = 0 ; 
+    while (i < 10 && nbPositifConsecutifsLignePerp < 4)
+    {
+      if (detectionLignePerpendiculaireAlternative())
+      {
+        nbPositifConsecutifsLignePerp ++ ;
+      }
+      else 
+      {
+        nbPositifConsecutifsLignePerp = 0 ; 
+      }
+      
+      i ++;
+      delay(TEMPS_ATTENTE/10);
+    }
+    if (nbPositifConsecutifsLignePerp >= 4)
     {
       nbLignesPerpendiculairesRencontrees ++;
-      ancienTemps = tempsGlobal;
+      nbPositifConsecutifsLignePerp = 0 ; 
       AX_BuzzerON(2000,100);
     }
     else 
@@ -254,7 +286,7 @@ void lireCapteurs()
   capteurs.readCalibrated(valeurSensors);
   for (int i = 0 ; i < 8 ; i++)
   {
-    Serial.print(capteurs.calibratedMaximumOff[i]);
+    Serial.print(valeurSensors[i]);
     Serial.print(" ");
   }
   Serial.println();
