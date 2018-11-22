@@ -27,7 +27,7 @@ Fonctions
 **************************************************************************** */
 
 void RecevoirMessage(){
-  AX_BuzzerON(5000,1000);
+  AX_BuzzerON(2500,1500);
   Serial.print("YO j'ai recu un MESSAGE: ");
   messageRecu = BLUETOOTH_read();
   Serial.println(messageRecu);
