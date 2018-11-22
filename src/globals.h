@@ -10,13 +10,17 @@ Date: 15-11-2018
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+
+int tempsGlobal = 0;
+int ancienTemps = 0;
+
 // pins pour controller le stepper motor.
 const int pinDirection = 39;
 const int pinStep = 37;
 
 // hauteur des etages en pouce (ref. absolue à partir du sol).
 const int nbEtages = 3;
-const float etages [nbEtages] = {0, 7.25, 9}; // hauteur en pouce.
+const float etages [nbEtages] = {0, 5.75, 10.65}; // hauteur en pouce.
 float hauteurActuelle = 0; // num d'étage, sol = 0
 
 // constantes pour le moteur.
