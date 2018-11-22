@@ -43,12 +43,28 @@ QTRSensorsAnalog capteurs(pinsCapteurs , NB_SENSORS,NUM_SAMPLES_PER_SENSOR,EMITT
 // {
 
 // }
-void ReculerTemps(int temps){
-  MOTOR_SetSpeed(GAUCHE,-.2);
-  MOTOR_SetSpeed(DROITE, -.2);
-  delay(temps);
-  MOTOR_SetSpeed(GAUCHE, 0);
-  MOTOR_SetSpeed(DROITE, 0);
+void ReculerDistance(float distanceAParcourir){
+  MOTOR_SetSpeed(GAUCHE, -0.2);
+  MOTOR_SetSpeed(DROITE,  -0.2);
+  float distanceCumuleGauche = 0 ;
+  float distanceCumuleDroite = 0 ;
+  ENCODER_ReadReset(GAUCHE);
+  ENCODER_ReadReset(DROITE);
+  while (distanceCumuleGauche < distanceAParcourir || distanceCumuleDroite < distanceAParcourir)
+  {
+    distanceCumuleGauche = -CIRCONFERENCE * ENCODER_Read(GAUCHE)/TICK_PAR_TOUR;
+    distanceCumuleDroite = -CIRCONFERENCE * ENCODER_Read(DROITE)/TICK_PAR_TOUR;
+
+    if (distanceCumuleGauche > distanceAParcourir)
+    {
+      MOTOR_SetSpeed(GAUCHE, 0);
+    }
+    if (distanceCumuleDroite > distanceAParcourir)
+    {
+      MOTOR_SetSpeed(DROITE, 0);
+    }
+  }
+  delay(250);
 }
 
 void AvancerTemps(int temps){
@@ -152,7 +168,7 @@ void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible)
 
 void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible)
 {
-  const double P = 0.0000200 ;
+  const double P = 0.0000200*1.25;
   const double I = 0.0000004;
   const double D = 0.0000500;
   double erreurI = 0 ; 
@@ -166,7 +182,7 @@ void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible)
   while(nbLignesPerpendiculairesRencontrees < p_nbLignesPerpendiculairesCible)
   {
     int i = 0 ; 
-    while (i < 10 && nbPositifConsecutifsLignePerp < 4)
+    while (i < 10 && nbPositifConsecutifsLignePerp < 5)
     {
       if (detectionLignePerpendiculaireAlternative())
       {
@@ -180,13 +196,13 @@ void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible)
       i ++;
       delay(TEMPS_ATTENTE/10);
     }
-    if (nbPositifConsecutifsLignePerp >= 4)
+    if (nbPositifConsecutifsLignePerp >= 5)
     {
       nbLignesPerpendiculairesRencontrees ++;
       nbPositifConsecutifsLignePerp = 0 ; 
       AX_BuzzerON(2000,100);
     }
-    else 
+    else if (!detectionLignePerpendiculaire())
     {
       int position = capteurs.readLine(valeurSensors);
 
@@ -224,7 +240,7 @@ void calibrationAutoQuartDeTour(int p_sensAntiHoraire)
 // p_sensAntiHoraire = 1 --> tourne en sens anti horaire 
 // p_sensAntiHoraire = -1 --> tourne en sens horaire 
 {
-  float distanceAParcourir = (DISTANCE_ENTRE_LES_ROUES*2*PI)/8;
+  float distanceAParcourir = (DISTANCE_ENTRE_LES_ROUES*2*PI)/8.0;
   MOTOR_SetSpeed(GAUCHE, p_sensAntiHoraire  * 0.2);
   MOTOR_SetSpeed(DROITE,  p_sensAntiHoraire * -0.2);
   float distanceCumuleGauche = 0 ;
@@ -249,7 +265,7 @@ void calibrationAutoQuartDeTour(int p_sensAntiHoraire)
 }
 void demiTour()
 {
-  float distanceAParcourir = (DISTANCE_ENTRE_LES_ROUES*2*PI)/3.80;
+  float distanceAParcourir = (DISTANCE_ENTRE_LES_ROUES*2*PI)/3.87; //3.80
   MOTOR_SetSpeed(GAUCHE, 0.2);
   MOTOR_SetSpeed(DROITE,  -0.2);
   float distanceCumuleGauche = 0 ;
@@ -270,7 +286,7 @@ void demiTour()
       MOTOR_SetSpeed(DROITE, 0);
     }
   }
-  delay(250);
+  delay(750);
 }
 void testThisShit()
 {

@@ -63,7 +63,9 @@ void setup(){
   pinMode(pinStep,OUTPUT); // Dir
 
   calibrerSuiveurDeLigneAuto();
+  AX_BuzzerON(2000,100);
   calibration();
+  AX_BuzzerON(1000,100);
 
    //Bluetooth
   BluetoothInit();
@@ -73,6 +75,8 @@ void setup(){
   delay(500);
   AX_BuzzerON(1000,100);
 
+  state = 1;
+  messageRecu = "012";
 }
 
 /* ****************************************************************************
@@ -122,11 +126,11 @@ void loop()
       ligneDroiteVSTD(x+1); // se rendre à l'allee
       calibrationAutoQuartDeTour(1); // Un quart de tour horaire 
       
-      gotoEtage(y,1);
+      //gotoEtage(y,1);
       ligneDroiteVSTD(1); // se rendre au bout de l'allée 
-      elevation(0.5,1);
+      //elevation(0.5,1);
 
-      ReculerTemps(1500);
+      ReculerDistance(15);
       demiTour();
       ligneDroiteVSTD(1); // retourner à l'allee
       calibrationAutoQuartDeTour(-1); // Un quart de tour antihoraire 
