@@ -43,6 +43,29 @@ QTRSensorsAnalog capteurs(pinsCapteurs , NB_SENSORS,NUM_SAMPLES_PER_SENSOR,EMITT
 // {
 
 // }
+void AvancerDistance(float distanceAParcourir){
+  MOTOR_SetSpeed(GAUCHE, 0.2);
+  MOTOR_SetSpeed(DROITE,  0.2);
+  float distanceCumuleGauche = 0 ;
+  float distanceCumuleDroite = 0 ;
+  ENCODER_ReadReset(GAUCHE);
+  ENCODER_ReadReset(DROITE);
+  while (distanceCumuleGauche < distanceAParcourir || distanceCumuleDroite < distanceAParcourir)
+  {
+    distanceCumuleGauche = CIRCONFERENCE * ENCODER_Read(GAUCHE)/TICK_PAR_TOUR;
+    distanceCumuleDroite = CIRCONFERENCE * ENCODER_Read(DROITE)/TICK_PAR_TOUR;
+
+    if (distanceCumuleGauche > distanceAParcourir)
+    {
+      MOTOR_SetSpeed(GAUCHE, 0);
+    }
+    if (distanceCumuleDroite > distanceAParcourir)
+    {
+      MOTOR_SetSpeed(DROITE, 0);
+    }
+  }
+}
+
 void ReculerDistance(float distanceAParcourir){
   MOTOR_SetSpeed(GAUCHE, -0.2);
   MOTOR_SetSpeed(DROITE,  -0.2);
@@ -64,7 +87,7 @@ void ReculerDistance(float distanceAParcourir){
       MOTOR_SetSpeed(DROITE, 0);
     }
   }
-  delay(250);
+  delay(500);
 }
 
 void AvancerTemps(int temps){
@@ -93,7 +116,7 @@ void dropItem(){
   delay(200);
   MOTOR_SetSpeed(GAUCHE, 0);
   MOTOR_SetSpeed(DROITE, 0);
-  delay(200);
+  delay(500);
 }
 
 void calibrerSuiveurDeLigneAuto()
@@ -168,9 +191,9 @@ void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible)
 
 void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible)
 {
-  const double P = 0.0000200*1.25;
-  const double I = 0.0000004;
-  const double D = 0.0000500;
+  const double P = 0.0000200*1.2;
+  const double I = 0.0000004*1.0;
+  const double D = 0.0000500*1.0;
   double erreurI = 0 ; 
   double ancienneErreur = 0 ; 
   int nbLignesPerpendiculairesRencontrees = 0 ; 
@@ -286,7 +309,7 @@ void demiTour()
       MOTOR_SetSpeed(DROITE, 0);
     }
   }
-  delay(750);
+  delay(500);
 }
 void testThisShit()
 {

@@ -30,28 +30,28 @@ void elevation(float distance,  float vitesse)
 // vitesse (float) : vitesse d'elevation (de 0 à 1).
 {
   int steps = abs(stepsParRev * filetsParPouce * distance);
-  Serial.print("Nb de steps = ");
-  Serial.println(steps);
+  // Serial.print("Nb de steps = ");
+  // Serial.println(steps);
   int pause = pauseMin / vitesse;
   if(distance >= 0)
   {
     digitalWrite(pinDirection, HIGH); // set la direction pour monter.
-    Serial.println("Sens = Up");
+    // Serial.println("Sens = Up");
   }
   else
   {
     digitalWrite(pinDirection, LOW); // set la direction pour descendre.
-    Serial.println("Sens = Down");
+    // Serial.println("Sens = Down");
   }
-  Serial.print("Vitesse = ");
-  Serial.println(vitesse);
-  Serial.print("Distance = ");
-  Serial.println(distance);
+  // Serial.print("Vitesse = ");
+  // Serial.println(vitesse);
+  // Serial.print("Distance = ");
+  // Serial.println(distance);
   for(int x = 0; x < steps; x++) // fait tourner le stepper motor le nb de steps desires.
   {
     if(ROBUS_IsBumper(2) && distance < 0)
     {
-      Serial.println("break");
+      // Serial.println("break");
       break;
     }
     digitalWrite(pinStep,HIGH); 
@@ -61,15 +61,15 @@ void elevation(float distance,  float vitesse)
   }
   
   hauteurActuelle = hauteurActuelle + distance;
-  Serial.print("Hauteur actuelle = ");
-  Serial.println(hauteurActuelle);
-  Serial.println("");
+  // Serial.print("Hauteur actuelle = ");
+  // Serial.println(hauteurActuelle);
+  // Serial.println("");
 }
 
 void calibration()
 // Calibration de l'origine.
 {
-  Serial.println("Calibration");
+  // Serial.println("Calibration");
   digitalWrite(pinDirection, LOW); // set la direction pour descendre
   while(!ROBUS_IsBumper(2))
   {
@@ -85,20 +85,20 @@ void calibration()
 void gotoEtage(int etage, float vitesse)
 // etage (int) : numero d'etage à laquelle ont veut aller
 {
-  Serial.print("Go to etage ");
-  Serial.println(etage);
+  // Serial.print("Go to etage ");
+  // Serial.println(etage);
   float distance = etages[etage] - hauteurActuelle;
-  unsigned long startTime = millis(); // Depart du chrono
+  // unsigned long startTime = millis(); // Depart du chrono
   elevation(distance, vitesse);
-  unsigned long endTime = millis(); // Fin du chrono
-  double elapsedTime = (endTime - startTime)/1000.0; // Calcul du temps pour l'elevation
-  Serial.print("Temps = ");
-  Serial.println(elapsedTime);
-  Serial.print("Vitesse (sec/po) = ");
-  Serial.println(abs(float(elapsedTime)/distance)); //Calcul de la vitesse lineaire (sec/po)
-  Serial.print("RPM = ");
-  Serial.println(abs(distance*filetsParPouce/elapsedTime*60)); //Calcul du RPM
-  Serial.println(" ");
+  // unsigned long endTime = millis(); // Fin du chrono
+  // double elapsedTime = (endTime - startTime)/1000.0; // Calcul du temps pour l'elevation
+  // Serial.print("Temps = ");
+  // Serial.println(elapsedTime);
+  // Serial.print("Vitesse (sec/po) = ");
+  // Serial.println(abs(float(elapsedTime)/distance)); //Calcul de la vitesse lineaire (sec/po)
+  // Serial.print("RPM = ");
+  // Serial.println(abs(distance*filetsParPouce/elapsedTime*60)); //Calcul du RPM
+  // Serial.println(" ");
   
 }
 #endif

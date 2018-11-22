@@ -20,12 +20,12 @@ const int pinStep = 37;
 
 // hauteur des etages en pouce (ref. absolue à partir du sol).
 const int nbEtages = 3;
-const float etages [nbEtages] = {0, 5.75, 10.65}; // hauteur en pouce.
+const float etages [nbEtages] = {0, 5.75, 10.7}; // hauteur en pouce.
 float hauteurActuelle = 0; // num d'étage, sol = 0
 
 // constantes pour le moteur.
 const int stepsParRev = 200;
-const int pauseMin = 650; // min 600 a 12 V, 
+const int pauseMin = 500; // min 600 a 12 V, 
 
 // nb de filets par pouce de la vis
 const int filetsParPouce = 12;

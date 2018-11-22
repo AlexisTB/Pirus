@@ -74,9 +74,6 @@ void setup(){
 
   delay(500);
   AX_BuzzerON(1000,100);
-
-  state = 1;
-  messageRecu = "012";
 }
 
 /* ****************************************************************************
@@ -122,20 +119,24 @@ void loop()
       Serial.print("y = ");
       Serial.println(y);
 
-      //calibrationAutoPetitDeplacement(1,CIRCONFERENCE/2); // pour pas lire la ligne de départ comme une première ligne perpendiculaire
+      AvancerDistance(CIRCONFERENCE/3.0); // pour pas lire la ligne de départ comme une première ligne perpendiculaire
       ligneDroiteVSTD(x+1); // se rendre à l'allee
       calibrationAutoQuartDeTour(1); // Un quart de tour horaire 
       
-      //gotoEtage(y,1);
+      gotoEtage(y,1);
       ligneDroiteVSTD(1); // se rendre au bout de l'allée 
-      //elevation(0.5,1);
+      elevation(0.5,1);
 
       ReculerDistance(15);
       demiTour();
       ligneDroiteVSTD(1); // retourner à l'allee
-      calibrationAutoQuartDeTour(-1); // Un quart de tour antihoraire 
+      calibrationAutoQuartDeTour(-1); // Un quart de tour antihoraire
+      if(hauteurActuelle < etages[1])
+      {
+        gotoEtage(1,1);
+      } 
       ligneDroiteVSTD(x+1); // se rendre à la ligne de départ
-      //dropItem();
+      dropItem();
       demiTour();
       //AvancerTemps(500);
 
