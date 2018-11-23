@@ -15,6 +15,7 @@ Inclure les librairies de functions que vous voulez utiliser
 #include "stepper.h"
 #include "globals.h"
 #include "suivreligne.h"
+#include "melody.h"
 #include <LibRobus.h>
 
 #define TIMER 3
@@ -128,10 +129,13 @@ void loop()
       calibrationAutoQuartDeTour(1); // Un quart de tour horaire 
       
       gotoEtage(y,1);
-      ligneDroiteVSTD(1); // se rendre au bout de l'allée 
-      elevation(0.7,1);
+      ligneDroiteVSTD(1,0); // se rendre au bout de l'allée 
+      delay (50);
+      MOTOR_SetSpeed(GAUCHE, 0);
+      MOTOR_SetSpeed(DROITE, 0);
+      elevation(0.9,1);
 
-      ReculerDistance(10);
+      ReculerDistance(15);
       demiTour();
       ligneDroiteVSTD(1); // retourner à l'allee
       calibrationAutoQuartDeTour(-1); // Un quart de tour antihoraire
@@ -139,8 +143,8 @@ void loop()
       {
         gotoEtage(1,1);
       } 
-      ligneDroiteVSTD(x+1); // se rendre à la ligne de départ
-      AvancerTemps(500);
+      ligneDroiteVSTD(x+1,0); // se rendre à la ligne de départ
+      delay(500);
       dropItem();
       demiTour();
 
@@ -148,6 +152,7 @@ void loop()
 
     state = 0; //mode attente
       // Chanson Avec le buzzer 
+      zelda();
    AX_BuzzerON(500,300);
    delay(299);
    AX_BuzzerON(1000,200);

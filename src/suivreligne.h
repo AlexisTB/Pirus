@@ -12,8 +12,8 @@ void calibrerSuiveurDeLigneAuto();
 void calibrerSuiveurDeLigneManuel();
 bool estUneLignePerpendiculaire();
 int detectionLignePerpendiculaire();
-void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible);
-void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible);
+void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible,bool fermerLesMoteursFin = 1);
+void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible, bool fermerLesMoteursFin);
 
 const float V_STD = 0.25 ; 
 const int NB_ALLEES_EPICERIE = 3 ; 
@@ -67,8 +67,8 @@ void AvancerDistance(float distanceAParcourir){
 }
 
 void ReculerDistance(float distanceAParcourir){
-  MOTOR_SetSpeed(GAUCHE, -0.2);
-  MOTOR_SetSpeed(DROITE,  -0.2);
+  MOTOR_SetSpeed(GAUCHE, -0.175);
+  MOTOR_SetSpeed(DROITE,  -0.175);
   float distanceCumuleGauche = 0 ;
   float distanceCumuleDroite = 0 ;
   ENCODER_ReadReset(GAUCHE);
@@ -184,12 +184,12 @@ int detectionLignePerpendiculaire()
     return estUneLignePerpendiculaire; 
 }
 
-void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible)
+void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible,bool fermerLesMoteursFin )
 {
-  ligneDroite(V_STD,p_nbLignesPerpendiculairesCible) ; 
+  ligneDroite(V_STD,p_nbLignesPerpendiculairesCible, fermerLesMoteursFin) ; 
 }
 
-void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible)
+void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible, bool fermerLesMoteursFin)
 {
   const double P = 0.0000200*2;
   const double I = 0.0000004*2;
@@ -238,7 +238,14 @@ void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible)
     }
 
   }
-  AvancerTemps(300);
+  MOTOR_SetSpeed(GAUCHE, p_vitesseCible);
+  MOTOR_SetSpeed(DROITE, p_vitesseCible);
+  delay(275);
+  if (fermerLesMoteursFin)
+  {
+    MOTOR_SetSpeed(GAUCHE, 0);
+    MOTOR_SetSpeed(DROITE, 0);
+  }
  }
 
 void calibrationAutoPetitDeplacement(int p_deplaceVersLavant, float p_distanceAParcourir)
