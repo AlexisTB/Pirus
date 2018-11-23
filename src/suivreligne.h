@@ -57,11 +57,11 @@ void AvancerDistance(float distanceAParcourir){
 
     if (distanceCumuleGauche > distanceAParcourir)
     {
-      MOTOR_SetSpeed(GAUCHE, 0);
+      MOTOR_SetSpeed(GAUCHE, 0.1);
     }
     if (distanceCumuleDroite > distanceAParcourir)
     {
-      MOTOR_SetSpeed(DROITE, 0);
+      MOTOR_SetSpeed(DROITE, 0.1);
     }
   }
 }
@@ -123,11 +123,11 @@ void calibrerSuiveurDeLigneAuto()
 // si tu feel lâche aujourd'hui (#BitchImNotLazyImFabulous) : 
 // 1) Place le à peu près au centre de la ligne 2) be amazed
 {
-    calibrationAutoPetitDeplacement(1,CIRCONFERENCE/4);
-    calibrationAutoQuartDeTour(); // Un quart de tour anti horaire 
+   // calibrationAutoPetitDeplacement(1,CIRCONFERENCE/4);
+    calibrationAutoQuartDeTour(-1); // Un quart de tour anti horaire 
     calibrationAutoPetitDeplacement(-1,CIRCONFERENCE/2);
     calibrationAutoPetitDeplacement(1,CIRCONFERENCE/2);
-    calibrationAutoQuartDeTour(-1); // Un quart de tour horaire 
+    calibrationAutoQuartDeTour(); // Un quart de tour horaire 
 }
 
 void calibrerSuiveurDeLigneManuel()
@@ -191,9 +191,9 @@ void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible)
 
 void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible)
 {
-  const double P = 0.0000200*1.2;
-  const double I = 0.0000004*1.0;
-  const double D = 0.0000500*1.0;
+  const double P = 0.0000200*2;
+  const double I = 0.0000004*2;
+  const double D = 0.0000500*2;
   double erreurI = 0 ; 
   double ancienneErreur = 0 ; 
   int nbLignesPerpendiculairesRencontrees = 0 ; 
@@ -205,7 +205,7 @@ void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible)
   while(nbLignesPerpendiculairesRencontrees < p_nbLignesPerpendiculairesCible)
   {
     int i = 0 ; 
-    while (i < 10 && nbPositifConsecutifsLignePerp < 5)
+    while (i < 10 && nbPositifConsecutifsLignePerp < 4)
     {
       if (detectionLignePerpendiculaireAlternative())
       {
@@ -219,7 +219,7 @@ void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible)
       i ++;
       delay(TEMPS_ATTENTE/10);
     }
-    if (nbPositifConsecutifsLignePerp >= 5)
+    if (nbPositifConsecutifsLignePerp >= 4)
     {
       nbLignesPerpendiculairesRencontrees ++;
       nbPositifConsecutifsLignePerp = 0 ; 

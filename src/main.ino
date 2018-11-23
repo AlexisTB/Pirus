@@ -74,6 +74,10 @@ void setup(){
 
   delay(500);
   AX_BuzzerON(1000,100);
+
+ // Hardcode d'une commande de l'aliment 0.
+  // state = 1;
+  // messageRecu = "0";
 }
 
 /* ****************************************************************************
@@ -119,15 +123,15 @@ void loop()
       Serial.print("y = ");
       Serial.println(y);
 
-      AvancerDistance(CIRCONFERENCE/3.0); // pour pas lire la ligne de départ comme une première ligne perpendiculaire
-      ligneDroiteVSTD(x+1); // se rendre à l'allee
+      //AvancerDistance(CIRCONFERENCE/4.0); // pour pas lire la ligne de départ comme une première ligne perpendiculaire
+      ligneDroiteVSTD(x+2); // se rendre à l'allee
       calibrationAutoQuartDeTour(1); // Un quart de tour horaire 
       
       gotoEtage(y,1);
       ligneDroiteVSTD(1); // se rendre au bout de l'allée 
-      elevation(0.5,1);
+      elevation(0.7,1);
 
-      ReculerDistance(15);
+      ReculerDistance(10);
       demiTour();
       ligneDroiteVSTD(1); // retourner à l'allee
       calibrationAutoQuartDeTour(-1); // Un quart de tour antihoraire
@@ -136,13 +140,21 @@ void loop()
         gotoEtage(1,1);
       } 
       ligneDroiteVSTD(x+1); // se rendre à la ligne de départ
+      AvancerTemps(500);
       dropItem();
       demiTour();
-      //AvancerTemps(500);
 
     }
 
     state = 0; //mode attente
+      // Chanson Avec le buzzer 
+   AX_BuzzerON(500,300);
+   delay(299);
+   AX_BuzzerON(1000,200);
+   delay(210);
+   AX_BuzzerON(1100,200);
+   delay(210);
+   AX_BuzzerON(1300,1000);
   }
 	
   
