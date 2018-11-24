@@ -75,18 +75,17 @@ void setup(){
 
   delay(500);
   AX_BuzzerON(1000,100);
-
  // Hardcode d'une commande de l'aliment 0.
-  // state = 1;
-  // messageRecu = "0";
+   //state = 1;
+   //messageRecu = "012";
 }
 
 /* ****************************************************************************
 Fonctions de boucle infini (loop())
 **************************************************************************** */
-
 void loop() 
 { 
+  // Please don't fuck up Bridget Bridgestone 
   SOFT_TIMER_Update();
 
   if (state == 1) {
@@ -124,42 +123,36 @@ void loop()
       Serial.print("y = ");
       Serial.println(y);
 
-      //AvancerDistance(CIRCONFERENCE/4.0); // pour pas lire la ligne de départ comme une première ligne perpendiculaire
       ligneDroiteVSTD(x+2); // se rendre à l'allee
       calibrationAutoQuartDeTour(1); // Un quart de tour horaire 
       
       gotoEtage(y,1);
-      ligneDroiteVSTD(1,0); // se rendre au bout de l'allée 
-      delay (50);
-      MOTOR_SetSpeed(GAUCHE, 0);
-      MOTOR_SetSpeed(DROITE, 0);
+      ligneDroiteVSTD(1,1,0); // se rendre au bout de l'allée 
       elevation(0.9,1);
-
       ReculerDistance(15);
       demiTour();
       ligneDroiteVSTD(1); // retourner à l'allee
+      delay(250);
       calibrationAutoQuartDeTour(-1); // Un quart de tour antihoraire
       if(hauteurActuelle < etages[1])
       {
         gotoEtage(1,1);
       } 
-      ligneDroiteVSTD(x+1,0); // se rendre à la ligne de départ
-      delay(500);
+      ligneDroiteVSTD(x+1,0,500); // se rendre à la ligne de départ
       dropItem();
       demiTour();
 
     }
 
     state = 0; //mode attente
-      // Chanson Avec le buzzer 
-      zelda();
-   AX_BuzzerON(500,300);
-   delay(299);
-   AX_BuzzerON(1000,200);
-   delay(210);
-   AX_BuzzerON(1100,200);
-   delay(210);
-   AX_BuzzerON(1300,1000);
+   // Good job Bridget ! 
+   AX_BuzzerON(880,200);
+   delay(200);
+   AX_BuzzerON(932.33,200);
+   delay(200);
+   AX_BuzzerON(987.77,200);
+   delay(200);
+   AX_BuzzerON(1046.5,1000);
   }
 	
   

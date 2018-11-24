@@ -12,10 +12,12 @@ void calibrerSuiveurDeLigneAuto();
 void calibrerSuiveurDeLigneManuel();
 bool estUneLignePerpendiculaire();
 int detectionLignePerpendiculaire();
-void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible,bool fermerLesMoteursFin = 1);
-void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible, bool fermerLesMoteursFin);
+void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible,bool fermerLesMoteursFin = 1,float p_tempsAContinuerApresLigne =200);
+void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible);
+void ligneDroiteTemps(double p_vitesseCible, float p_tempsCible);
 
 const float V_STD = 0.25 ; 
+double erreurI = 0 ; 
 const int NB_ALLEES_EPICERIE = 3 ; 
 const int GAUCHE = 0 ; 
 const int DROITE = 1 ;
@@ -67,7 +69,7 @@ void AvancerDistance(float distanceAParcourir){
 }
 
 void ReculerDistance(float distanceAParcourir){
-  MOTOR_SetSpeed(GAUCHE, -0.175);
+  MOTOR_SetSpeed(GAUCHE, -0.185);
   MOTOR_SetSpeed(DROITE,  -0.175);
   float distanceCumuleGauche = 0 ;
   float distanceCumuleDroite = 0 ;
@@ -93,6 +95,14 @@ void ReculerDistance(float distanceAParcourir){
 void AvancerTemps(int temps){
   MOTOR_SetSpeed(GAUCHE,.2);
   MOTOR_SetSpeed(DROITE,.2);
+  delay(temps);
+  MOTOR_SetSpeed(GAUCHE, 0);
+  MOTOR_SetSpeed(DROITE, 0);
+}
+
+void reculerTemps(int temps){
+  MOTOR_SetSpeed(GAUCHE,-.1);
+  MOTOR_SetSpeed(DROITE,-.1);
   delay(temps);
   MOTOR_SetSpeed(GAUCHE, 0);
   MOTOR_SetSpeed(DROITE, 0);
@@ -184,17 +194,22 @@ int detectionLignePerpendiculaire()
     return estUneLignePerpendiculaire; 
 }
 
-void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible,bool fermerLesMoteursFin )
+void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible,bool fermerLesMoteursFin,float p_tempsAContinuerApresLigne)
 {
-  ligneDroite(V_STD,p_nbLignesPerpendiculairesCible, fermerLesMoteursFin) ; 
+  ligneDroite(V_STD,p_nbLignesPerpendiculairesCible) ; 
+  ligneDroiteTemps(V_STD,p_tempsAContinuerApresLigne);
+  if (fermerLesMoteursFin)
+  {
+    MOTOR_SetSpeed(GAUCHE, 0);
+    MOTOR_SetSpeed(DROITE, 0);
+  }
 }
 
-void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible, bool fermerLesMoteursFin)
+void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible)
 {
-  const double P = 0.0000200*2;
-  const double I = 0.0000004*2;
-  const double D = 0.0000500*2;
-  double erreurI = 0 ; 
+  const double P = 0.0000200*1.75;
+  const double I = 0.0000004*1.75;
+  const double D = 0.0000500*1.75;
   double ancienneErreur = 0 ; 
   int nbLignesPerpendiculairesRencontrees = 0 ; 
   int nbPositifConsecutifsLignePerp = 0 ; 
@@ -234,20 +249,41 @@ void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible, boo
       double erreurD = erreurP - ancienneErreur;
       ancienneErreur = erreurP;
 
-      MOTOR_SetSpeed(DROITE, p_vitesseCible + P * erreurP + I * erreurI + D * erreurD);
+      MOTOR_SetSpeed(DROITE,  p_vitesseCible +  (P * erreurP + I * erreurI + D * erreurD));
     }
 
   }
-  MOTOR_SetSpeed(GAUCHE, p_vitesseCible);
-  MOTOR_SetSpeed(DROITE, p_vitesseCible);
-  delay(275);
-  if (fermerLesMoteursFin)
-  {
-    MOTOR_SetSpeed(GAUCHE, 0);
-    MOTOR_SetSpeed(DROITE, 0);
-  }
  }
 
+void ligneDroiteTemps(double p_vitesseCible, float p_tempsCible)
+{
+  const int TEMPS_A_ATTENDRE = 25 ; 
+  const double P = 0.0000200/2;
+  const double I = 0.0000004/2;
+  const double D = 0.0000500/2;
+  double ancienneErreur = 0 ; 
+  float tempsCumule = 0 ;
+
+  MOTOR_SetSpeed(GAUCHE, p_vitesseCible);
+  MOTOR_SetSpeed(DROITE, p_vitesseCible);
+
+  while(tempsCumule < p_tempsCible)
+  {
+    delay(TEMPS_A_ATTENDRE);
+    tempsCumule += TEMPS_A_ATTENDRE; 
+    if (!detectionLignePerpendiculaire())
+    {
+      int position = capteurs.readLine(valeurSensors);
+
+      double erreurP = position - CENTRE;
+      erreurI += erreurP  ; 
+      double erreurD = erreurP - ancienneErreur;
+      ancienneErreur = erreurP;
+
+      MOTOR_SetSpeed(DROITE, p_vitesseCible +  (P * erreurP + I * erreurI + D * erreurD));
+    }
+  }
+ }
 void calibrationAutoPetitDeplacement(int p_deplaceVersLavant, float p_distanceAParcourir)
 // p_deplaceVersLavant = 1 --> avance
 // p_deplaceVersLavant = -1 --> recule
