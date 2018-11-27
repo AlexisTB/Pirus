@@ -77,7 +77,7 @@ void setup(){
   AX_BuzzerON(1000,100);
  // Hardcode d'une commande de l'aliment 0.
    //state = 1;
-   //messageRecu = "012";
+   //messageRecu = "2";
 }
 
 /* ****************************************************************************
@@ -138,7 +138,7 @@ void loop()
       {
         gotoEtage(1,1);
       } 
-      ligneDroiteVSTD(x+1,0,500); // se rendre à la ligne de départ
+      ligneDroiteVSTD(x+1,0,900); // se rendre à la ligne de départ
       dropItem();
       demiTour();
 

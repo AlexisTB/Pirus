@@ -12,11 +12,11 @@ void calibrerSuiveurDeLigneAuto();
 void calibrerSuiveurDeLigneManuel();
 bool estUneLignePerpendiculaire();
 int detectionLignePerpendiculaire();
-void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible,bool fermerLesMoteursFin = 1,float p_tempsAContinuerApresLigne =200);
+void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible,bool fermerLesMoteursFin = 1,float p_tempsAContinuerApresLigne =225);
 void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible);
 void ligneDroiteTemps(double p_vitesseCible, float p_tempsCible);
 
-const float V_STD = 0.25 ; 
+const float V_STD = 0.20 ; 
 double erreurI = 0 ; 
 const int NB_ALLEES_EPICERIE = 3 ; 
 const int GAUCHE = 0 ; 
@@ -207,9 +207,9 @@ void ligneDroiteVSTD(int p_nbLignesPerpendiculairesCible,bool fermerLesMoteursFi
 
 void ligneDroite(double p_vitesseCible, int p_nbLignesPerpendiculairesCible)
 {
-  const double P = 0.0000200*1.75;
-  const double I = 0.0000004*1.75;
-  const double D = 0.0000500*1.75;
+  const double P = 0.000090;//0.0000200*2.25; //1.75
+  const double I = 0.0000006;//0.0000004*2.25;
+  const double D = 0.000085*1.5;//0.0000500*2.25;
   double ancienneErreur = 0 ; 
   int nbLignesPerpendiculairesRencontrees = 0 ; 
   int nbPositifConsecutifsLignePerp = 0 ; 
