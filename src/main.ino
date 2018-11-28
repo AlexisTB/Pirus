@@ -3,6 +3,13 @@ Projet: PIRUS S1
 Equipe: P-19
 Auteurs: -Jeremie Bourque
          -Émile Dufour
+         -Francis Cardinal
+         -Phillipe Turcotte
+         -Maude Poirier
+         -Tristan Roy
+         -Emily Nguyen
+         -Alexis Tremblay-Lebel
+         -Félix-Antoine Toussaint
 Description: Robot de magasinage
 Date: 15-11-2018
 */
@@ -138,7 +145,7 @@ void loop()
       {
         gotoEtage(1,1);
       } 
-      ligneDroiteVSTD(x+1,0,900); // se rendre à la ligne de départ
+      ligneDroiteVSTD(x+1,0,1250); // se rendre à la ligne de départ
       dropItem();
       demiTour();
 
